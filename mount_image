@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# != 2 ]; then
-    printf "Usage: $0 image mount-point\n"
+    printf "Usage: $0 image-file mount-directory\n"
     exit 1
 fi
 
@@ -23,6 +23,9 @@ if [ ! -e $dir ]; then
 fi
 
 if mount_cd9660 /dev/md$devnum $dir; then
-    printf "Be sure to unmount using umount_image, not umount!\n"
+    cat << EOM
+Be sure to unmount using umount_image, not umount, or the memory disk
+will not be detached.
+EOM
 fi
 

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if [ $# != 2 ]; then
+    printf "Usage: $0 image mount-point\n"
+    exit 1
+fi
+
+image=$1
+dir=$2
+
+# Find next available device number for mdconfig
+devnum=0
+while [ -e /dev/md${devnum} ]; do
+    devnum=$((devnum++))
+done
+
+# Create memory disk from image
+mdconfig -a -t vnode -f $image -u ${devnum}
+
+if [ ! -e $dir ]; then
+    printf "$0: Error: $dir: No such directory.\n"
+    exit 1
+fi
+
+if mount_cd9660 /dev/md$devnum $dir; then
+    printf "Be sure to unmount using umount_image, not umount!\n"
+fi
+

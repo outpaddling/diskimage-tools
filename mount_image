@@ -11,7 +11,7 @@ dir=$2
 # Find next available device number for mdconfig
 devnum=0
 while [ -e /dev/md${devnum} ]; do
-    devnum=$((devnum++))
+    devnum=$((devnum+1))
 done
 
 # Create memory disk from image

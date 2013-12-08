@@ -1,0 +1,34 @@
+.TH umount_cd9660_image
+.SH NAME    \" Section header
+.PP
+
+umount_cd9660_image \- Unmount a disk image and detach the memory disk
+
+\" Convention:
+\" Underline anything that is typed verbatim - commands, etc.
+.SH SYNOPSIS
+.PP
+.nf 
+.na
+umount_cd9660_image mount-point
+.ad
+.fi
+
+\" Optional sections
+.SH "DESCRIPTION"
+
+The
+.B umount_cd9660_image
+command unmounts a disk image that was previously mounted using
+.B mount_cd9660_image
+and detaches the memory disk that must be created in order to mount
+a disk image.
+
+.SH "SEE ALSO"
+umount_cd9660_image(1), umount_cd9660(1), mdconfig(1)
+
+.SH AUTHOR
+.nf
+.na
+Jason Bacon
+

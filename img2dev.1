@@ -1,0 +1,32 @@
+.TH img2dev
+.SH NAME    \" Section header
+.PP
+
+img2dev \- Write a disk image file to a physical disk
+
+\" Convention:
+\" Underline anything that is typed verbatim - commands, etc.
+.SH SYNOPSIS
+.PP
+.nf 
+.na 
+img2dev image-file device
+.ad
+.fi
+
+\" Optional sections
+.SH "DESCRIPTION"
+
+The
+.B img2dev
+command writes a disk image file to a disk device.  It is primarily
+intended as a convenience for writing FreeBSD install images to an
+external disk such as a USB flash drive.
+
+.SH "SEE ALSO"
+dd(1)
+
+.SH AUTHOR
+.nf
+.na
+Jason Bacon

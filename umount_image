@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+case $# in
+1)
+    ;;
+*)
+    while [ $# -gt 1 ]; do
+	flags="$flags $1"
+	shift
+    done
+    ;;
+esac
+	
+dir="$1"
+# mount | awk -v dir="$dir" '$3 == dir { print $3 }'
+if [ 0`mount | awk -v dir="$dir" '$3 == dir { print $3 }'` != 0"$dir" ]; then
+    printf "\nError: $dir not found in current mount table.  Options are:\n\n"
+    mount | awk ' { print $3 }'
+fi
+
+devnum=`mount | awk -v dir="$dir" '$3 == dir { print $1 }' | cut -c 8-`
+
+if umount $flags $dir; then
+    mdconfig -d -u $devnum
+fi
+

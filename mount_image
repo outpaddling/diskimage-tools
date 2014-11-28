@@ -1,0 +1,38 @@
+#!/bin/sh -e
+
+if [ $# != 3 ]; then
+    cat << EOM
+
+Usage: $0 msdosfs|cd9660 image-file mount-directory
+
+EOM
+    exit 1
+fi
+
+fs_type=$1
+image=$2
+dir=$3
+
+# Create memory disk from image
+md=`mdconfig -f $image`
+
+if [ ! -f $image ]; then
+    printf "$0: Error: $image: No such file.\n"
+    exit 1
+fi
+
+if [ ! -d $dir ]; then
+    printf "$0: Error: $dir: No such directory.\n"
+    exit 1
+fi
+
+if mount_$fs_type /dev/$md $dir; then
+    cat << EOM
+Be sure to unmount using umount_image, not umount, or the memory disk
+will not be detached.
+EOM
+else
+    devnum=`echo $md | cut -c 3-`
+    mdconfig -d -u $devnum
+fi
+

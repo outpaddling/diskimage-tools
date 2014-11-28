@@ -1,0 +1,60 @@
+.TH mount_image 1
+.SH NAME
+.PP
+ 
+mount_image \- Mount a disk image
+
+\" Convention:
+\" Underline anything that is typed verbatim - commands, etc.
+.SH SYNOPSIS
+.PP
+.nf 
+.na
+mount_image filesystem-type image-file mount-point
+.ad
+.fi
+
+\" Optional sections
+.SH "DESCRIPTION"
+The
+.B mount_image
+command mounts a disk image, such as a ISO 9660 CD/DVD image file or
+a FAT (msdos) image on the directory "mount-point".
+
+The filesystem-type argument must match the name of one of FreeBSD's filesystem
+specific mount commands.  For example, FreeBSD's mount_msdosfs would be
+used to mount a FAT filesystem, so to mount a FAT disk image, use
+
+.nf
+.na
+mount_image msdosfs filename mount-point
+.ad
+.fi
+
+The process involves creating a memory disk image using
+.B mdconfig,
+which must be detached using mdconfig in order to release the resources.
+
+Hence, images mounted using
+.B mount_image
+should always be unmounted using
+.B umount_image,
+which automatically detaches the correct memory disk.
+
+.SH "NOTES"
+
+The FreeBSD tar command is capable of extracting cd9660 ISO images, so
+it is unnecessary to mount them if your goal is to copy their contents.
+
+.SH "SEE ALSO"
+umount_image(1), mount(1), mdconfig(1), tar(1)
+
+.SH BUGS
+Please report bugs to the author and send patches in unified diff format.
+(man diff for more information)
+
+.SH AUTHOR
+.nf
+.na
+Jason Bacon
+

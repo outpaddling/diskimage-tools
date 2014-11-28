@@ -1,9 +1,24 @@
 #!/bin/sh -e
 
-if [ $# != 3 ]; then
+if [ $# -lt 3 ]; then
     cat << EOM
 
-Usage: $0 msdosfs|cd9660 image-file mount-directory
+Usage: $0 msdosfs|cd9660 image-file mount-directory [slice]
+
+Examples:
+	
+    Mount a CD/DVD image:
+    
+	mount_image cd9660 FreeBSD-10.1-RELEASE-amd64-disc1.iso /mnt
+
+    Mount a FreeDOS USB image, with the filesystem on slice one (/dev/md0s1):
+    
+	mount_image msdosfs FreeDOS-1.1-memstick-3-30M.img /mnt 1
+    
+    Mount a FreeDOS floppy disk image with the filesystem on the raw volume
+    (no partitions/slices):
+    
+	mount_image msdosfs fdboot.img /mnt
 
 EOM
     exit 1
@@ -12,6 +27,11 @@ fi
 fs_type=$1
 image=$2
 dir=$3
+if [ $# = 4 ]; then
+    slice="s$4"
+else
+    slice=""
+fi
 
 # Create memory disk from image
 md=`mdconfig -f $image`
@@ -26,7 +46,7 @@ if [ ! -d $dir ]; then
     exit 1
 fi
 
-if mount_$fs_type /dev/$md $dir; then
+if mount_$fs_type /dev/$md$slice $dir; then
     cat << EOM
 Be sure to unmount using umount_image, not umount, or the memory disk
 will not be detached.

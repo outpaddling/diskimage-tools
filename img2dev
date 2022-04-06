@@ -15,10 +15,20 @@ if [ `echo $dev | cut -c 1-4` != '/dev' ]; then
     dev="/dev/$dev"
 fi
 
+case $(uname) in
+FreeBSD)
+    flags="status=progress"
+    ;;
+
+*)
+    ;;
+
+esac
+
 printf "Make sure $dev is NOT mounted.  Press return when ready..."
 read junk
 set -x
 # dd if=$image of=$dev bs=10240 conv=sync
 # 9.0 install docs
-dd if=$image of=$dev bs=64k conv=sync
+dd if=$image of=$dev $flags bs=64k conv=sync
 

@@ -1,8 +1,14 @@
-#!/bin/sh
+#!/bin/sh -e
 
 #
+if [ 0$1 == 0--success-file ]; then
+    success_file=$2
+    shift
+    shift
+fi
+
 if [ $# != 2 ]; then
-    printf "Usage: $0 image-file device\n"
+    printf "Usage: $0 [--success-file filename] image-file device\n"
     printf "\nExample:\n\n$0 FreeBSD-8.3-RELEASE-i386-memstick.img /dev/da0\n"
     printf "\n(Use da0, not da0a, da0s1, etc.)\n"
     exit 1
@@ -20,6 +26,10 @@ FreeBSD)
     flags="status=progress"
     ;;
 
+NetBSD)
+    flags="progress=1"
+    ;;
+
 *)
     ;;
 
@@ -31,4 +41,4 @@ set -x
 # dd if=$image of=$dev bs=10240 conv=sync
 # 9.0 install docs
 dd if=$image of=$dev $flags bs=64k conv=sync
-
+touch $success_file

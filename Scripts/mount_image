@@ -52,7 +52,6 @@ else
 fi
 
 # Create memory disk from image
-set -x
 md=`mdconfig -f $image`
 
 if [ ! -f $image ]; then
@@ -65,8 +64,12 @@ if [ ! -d $dir ]; then
     exit 1
 fi
 
-ls /dev/md*
-pause
+ls /dev/$md*
+if [ -z "$slice" ]; then
+    printf "Slice (1, 2, 2a, etc.) [none] "
+    read slice
+    slice=s$slice
+fi
 
 if [ $fs_type = ufs ]; then
     mount=mount

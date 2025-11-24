@@ -1,11 +1,29 @@
 #!/bin/sh -e
 
+##########################################################################
+#   Function description:
+#       Pause until user presses return
+##########################################################################
+
+pause()
+{
+    local junk
+    
+    printf "Press return to continue..."
+    read junk
+}
+
+
 if [ $# -lt 3 ]; then
     cat << EOM
 
-Usage: $0 msdosfs|cd9660 image-file mount-directory [slice]
+Usage: $0 ufs|msdosfs|cd9660 image-file mount-directory [slice]
 
 Examples:
+
+    Mount a FreeBSD installer USB image:
+    
+	mount_image ufs FreeBSD-14.3-RELEASE-amd64-memstick.img /mnt 2a
 	
     Mount a CD/DVD image:
     
@@ -34,6 +52,7 @@ else
 fi
 
 # Create memory disk from image
+set -x
 md=`mdconfig -f $image`
 
 if [ ! -f $image ]; then
@@ -46,13 +65,22 @@ if [ ! -d $dir ]; then
     exit 1
 fi
 
-if mount_$fs_type /dev/$md$slice $dir; then
+ls /dev/md*
+pause
+
+if [ $fs_type = ufs ]; then
+    mount=mount
+else
+    mount=mount_$fs_type
+fi
+if $mount /dev/$md$slice $dir; then
     cat << EOM
+
 Be sure to unmount using umount_image, not umount, or the memory disk
 will not be detached.
+
 EOM
 else
     devnum=`echo $md | cut -c 3-`
     mdconfig -d -u $devnum
 fi
-

@@ -68,7 +68,11 @@ ls /dev/$md*
 if [ -z "$slice" ]; then
     printf "Slice (1, 2, 2a, etc.) [none] "
     read slice
-    slice=s$slice
+    if [ -n "$slice" ]; then
+	slice=s$slice
+    else
+	slice=''
+    fi
 fi
 
 if [ $fs_type = ufs ]; then
